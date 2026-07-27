@@ -6,7 +6,7 @@ import random
 
 
 # first let's create a function that creates one employee as a dictionary
-def create_employee():
+def create_employee() -> dict:
 
     # generate an age between 18 and 110, assuming that employees start
     # building pension benefits from the age of 18. Use the Dutch population
@@ -72,9 +72,22 @@ def create_employee():
 
     return employee
 
+# create another function that will take a number "n" as an input, and will 
+# return a dictionary of n generated employees
+def employees_sim(n: int) -> dict:
+    employees = {}
+
+    # picking the range from 1 to n+1, so that every employee has an ID
+    for i in range(1, n+1):
+        employees[i] = create_employee()
+
+    return employees
+
+
 # runs the examples below only if the file is run directly
 if __name__ == "__main__":
     print(create_employee())
+
 
     
 
