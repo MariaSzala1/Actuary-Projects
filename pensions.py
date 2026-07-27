@@ -53,7 +53,7 @@ def create_employee():
     # starts working between the ages of 18 and 26. The starting age cannot
     # be larger than the employee's current age
     starting_age = random.randint(18, min(26, age))
-    years_of_service = min(age, retirement_age) - starting_age 
+    years_of_employment = min(age, retirement_age) - starting_age 
 
     # then assign the pension status value
     if age < retirement_age:
@@ -65,7 +65,7 @@ def create_employee():
     employee = {
         "age": age,
         "salary": salary,
-        "years of service": years_of_service,
+        "years of employment": years_of_employment,
         "retirement age": retirement_age,
         "pension status": pension_status
     }
