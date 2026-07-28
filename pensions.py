@@ -24,7 +24,7 @@ def create_employee() -> dict:
     min_age = 18
     max_age = 110
 
-    while age < 18 or age > 110:
+    while age < min_age or age > max_age:
         age = random.weibullvariate(scale, shape)
 
     age = round(age)
@@ -83,10 +83,23 @@ def employees_sim(n: int) -> dict:
 
     return employees
 
+# next let's create a function that will calculate the pension benefit of
+# a single employee
+def single_pension_calculation(employee: dict, accrual_rate: float) -> float:
+    salary = employee["salary"]
+    years_of_employment = employee["years of employment"]
+    annual_pension = salary * years_of_employment * accrual_rate
+    annual_pension = round(annual_pension, 2)
+
+    return annual_pension
+
 
 # runs the examples below only if the file is run directly
 if __name__ == "__main__":
     print(create_employee())
+    print(single_pension_calculation({'age': 32, 'salary': 52016.6,
+                                'years of employment': 12, 'retirement age': 67,
+                                  'pension status': 'active'}, 0.0175))
 
 
     
