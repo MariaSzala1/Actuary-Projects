@@ -145,6 +145,21 @@ def all_pv_of_pension(employees: dict, accrual_rate: float,
                                                          discount_rate)
     return all_pv_pensions
 
+# now let's create a function that returns the total amount of pension
+# liabilities of a company
+def total_pension_liabilities(employees: dict, accrual_rate:float, 
+                              survival_prob: float, annual_survival_decrease: float, 
+                              discount_rate:float) -> float:
+    
+    all_liabilities = all_pv_of_pension(employees, accrual_rate, survival_prob,
+                                  annual_survival_decrease, discount_rate)
+
+    total = sum(all_liabilities.values())
+
+    total = round(total, 2)
+
+    return total
+
 
 
 # runs the examples below only if the file is run directly
@@ -156,6 +171,7 @@ if __name__ == "__main__":
     print(calculate_all_pensions(employees, 0.0175))
     print(one_pv_of_pension(employee, 0.0175, 0.95, 0.01, 0.04))
     print(all_pv_of_pension(employees, 0.0175, 0.95, 0.01, 0.04))
+    print(total_pension_liabilities(employees, 0.0175, 0.95, 0.01, 0.04))
 
 
     
