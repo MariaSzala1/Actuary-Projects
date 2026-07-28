@@ -106,15 +106,43 @@ def calculate_all_pensions(accrual_rate: float, n:int) -> dict:
 
     return all_pensions
 
+# next let's create a function that will estimate how much one employee's
+# future annual pension payments is worth today
+def one_present_value_of_pension(employee: dict, accrual_rate: float, 
+                             survival_prob: float, annual_survival_decrease: float, 
+                             rate: float) -> float:
+    retirement_age = employee["retirement age"]
+    age = employee["age"]
+    salary = employee["salary"]
+    years_of_employment = employee["years of employment"]
+    years_until_retirement = max(retirement_age - age, 0)
+    # I'm assuming that a person receives payments until the age of 110
+    number_of_future_payments = 110 - max(age, retirement_age)
+    total_pv = 0
+    # I'm assuming that the first payment starts exactly when 
+    # an employee reaches retirement age
+    for i in range(number_of_future_payments):
+        years_from_today = years_until_retirement + i
+        # as we know survival rates decrease with each passing year, so we have to
+        # take it into account in our simulation
+        survival_for_year = max(survival_prob - annual_survival_decrease * years_from_today, 0)
+        expected_payment = salary * years_of_employment * accrual_rate * survival_for_year
+        present_val = expected_payment / (1 + rate)**years_from_today
+        total_pv += present_val
+
+    total_pv = round(total_pv, 2)
+
+    return total_pv
+    
 
 
 # runs the examples below only if the file is run directly
 if __name__ == "__main__":
-    print(create_employee())
-    print(single_pension_calculation({'age': 32, 'salary': 52016.6,
-                                'years of employment': 12, 'retirement age': 67,
-                                  'pension status': 'active'}, 0.0175))
+    result = create_employee()
+    print(result)
+    print(single_pension_calculation(result, 0.0175))
     print(calculate_all_pensions(0.0175, 10))
+    print(one_present_value_of_pension(result, 0.0175, 0.95, 0.01, 0.04))
 
 
     
