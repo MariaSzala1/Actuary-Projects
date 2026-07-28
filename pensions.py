@@ -160,6 +160,42 @@ def total_pension_liabilities(employees: dict, accrual_rate:float,
 
     return total
 
+# Now let's create a function that returns the total amount the company's total expected
+# pension payments for each future year
+def expected_payments_by_year(employees: dict, accrual_rate: float, survival_prob: float,
+                              annual_survival_decrease: float) -> dict:
+    payments_per_year = {}
+
+    for employee in employees.values():
+        annual_pension = single_pension_calculation(employee, accrual_rate)
+        retirement_age = employee["retirement age"]
+        age = employee["age"]
+
+        years_until_retirement = max(0, retirement_age - age)
+        number_of_future_payments = 110 - max(age, retirement_age)
+
+        for i in range(number_of_future_payments):
+            years_from_today = years_until_retirement + i
+            survival_for_year = max(survival_prob - annual_survival_decrease 
+                                    * years_from_today, 0)
+            expected_payment = annual_pension * survival_for_year
+
+            # if this is the first payment recorded for the year, create a new entry
+            # in the dictionary where the payments can be accumulated for that year
+            if years_from_today not in payments_per_year:
+                payments_per_year[years_from_today] = 0
+
+            payments_per_year[years_from_today] += expected_payment
+
+    # round the totals after adding all employee payments to prevent
+    # floating point results (such as 82999.9999999999)
+    for year in payments_per_year:
+        payments_per_year[year] = round(payments_per_year[year], 2)
+
+    # sort the dictionary, so the years appears in chronological order
+    payments_per_year = dict(sorted(payments_per_year.items()))
+
+    return payments_per_year
 
 
 # runs the examples below only if the file is run directly
@@ -172,6 +208,7 @@ if __name__ == "__main__":
     print(one_pv_of_pension(employee, 0.0175, 0.95, 0.01, 0.04))
     print(all_pv_of_pension(employees, 0.0175, 0.95, 0.01, 0.04))
     print(total_pension_liabilities(employees, 0.0175, 0.95, 0.01, 0.04))
+    print(expected_payments_by_year(employees, 0.0175, 0.95, 0.01))
 
 
     
