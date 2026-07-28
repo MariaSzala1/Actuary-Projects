@@ -88,10 +88,24 @@ def employees_sim(n: int) -> dict:
 def single_pension_calculation(employee: dict, accrual_rate: float) -> float:
     salary = employee["salary"]
     years_of_employment = employee["years of employment"]
+    # For simplicity, I'm assuming that the current salary applies to
+    # all previous years of employment as well
     annual_pension = salary * years_of_employment * accrual_rate
     annual_pension = round(annual_pension, 2)
 
     return annual_pension
+
+# now let's define a function that will loop through all of the employees
+# and will calculate the pension of each employee
+def calculate_all_pensions(accrual_rate: float, n:int) -> dict:
+    employees = employees_sim(n)
+
+    all_pensions = {}
+    for employee_id, employee in employees.items():
+        all_pensions[employee_id] = single_pension_calculation(employee, accrual_rate)
+
+    return all_pensions
+
 
 
 # runs the examples below only if the file is run directly
@@ -100,6 +114,7 @@ if __name__ == "__main__":
     print(single_pension_calculation({'age': 32, 'salary': 52016.6,
                                 'years of employment': 12, 'retirement age': 67,
                                   'pension status': 'active'}, 0.0175))
+    print(calculate_all_pensions(0.0175, 10))
 
 
     
