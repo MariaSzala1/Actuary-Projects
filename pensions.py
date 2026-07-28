@@ -97,8 +97,7 @@ def single_pension_calculation(employee: dict, accrual_rate: float) -> float:
 
 # now let's define a function that will loop through all of the employees
 # and will calculate the pension of each employee
-def calculate_all_pensions(accrual_rate: float, n:int) -> dict:
-    employees = employees_sim(n)
+def calculate_all_pensions(employees: dict, accrual_rate: float) -> dict:
 
     all_pensions = {}
     for employee_id, employee in employees.items():
@@ -107,10 +106,10 @@ def calculate_all_pensions(accrual_rate: float, n:int) -> dict:
     return all_pensions
 
 # next let's create a function that will estimate how much one employee's
-# future annual pension payments is worth today
-def one_present_value_of_pension(employee: dict, accrual_rate: float, 
+# future annual pension payments are worth today
+def one_pv_of_pension(employee: dict, accrual_rate: float, 
                              survival_prob: float, annual_survival_decrease: float, 
-                             rate: float) -> float:
+                             discount_rate: float) -> float:
     retirement_age = employee["retirement age"]
     age = employee["age"]
     salary = employee["salary"]
@@ -127,22 +126,36 @@ def one_present_value_of_pension(employee: dict, accrual_rate: float,
         # take it into account in our simulation
         survival_for_year = max(survival_prob - annual_survival_decrease * years_from_today, 0)
         expected_payment = salary * years_of_employment * accrual_rate * survival_for_year
-        present_val = expected_payment / (1 + rate)**years_from_today
+        present_val = expected_payment / (1 + discount_rate)**years_from_today
         total_pv += present_val
 
     total_pv = round(total_pv, 2)
 
     return total_pv
-    
+
+def all_pv_of_pension(employees: dict, accrual_rate: float, 
+                             survival_prob: float, annual_survival_decrease: float, 
+                             discount_rate: float) -> dict:
+    all_pv_pensions = {} 
+
+    for employee_id, employee in employees.items():
+        all_pv_pensions[employee_id] = one_pv_of_pension(employee, accrual_rate, 
+                                                         survival_prob, 
+                                                         annual_survival_decrease, 
+                                                         discount_rate)
+    return all_pv_pensions
+
 
 
 # runs the examples below only if the file is run directly
 if __name__ == "__main__":
-    result = create_employee()
-    print(result)
-    print(single_pension_calculation(result, 0.0175))
-    print(calculate_all_pensions(0.0175, 10))
-    print(one_present_value_of_pension(result, 0.0175, 0.95, 0.01, 0.04))
+    employee = create_employee()
+    employees = employees_sim(5)
+    print(employee)
+    print(single_pension_calculation(employee, 0.0175))
+    print(calculate_all_pensions(employees, 0.0175))
+    print(one_pv_of_pension(employee, 0.0175, 0.95, 0.01, 0.04))
+    print(all_pv_of_pension(employees, 0.0175, 0.95, 0.01, 0.04))
 
 
     
