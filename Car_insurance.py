@@ -85,10 +85,23 @@ def create_driver() -> dict:
 
     return driver
 
+# now let's create a function that will return the dictonary of several policyholders
+def sim_policyholders(n: int) -> dict:
+    drivers = {}
+
+    # picking from a range of 1 to n+1 so that every driver has an ID
+    for i in range(1, n + 1):
+        drivers[i] = create_driver()
+
+    return drivers
+
+
 # runs the examples below only if the file is run directly 
 if __name__ == "__main__":
     driver = create_driver()
+    drivers = sim_policyholders(5)
     print(driver)
+    print(drivers)
 
 
 
