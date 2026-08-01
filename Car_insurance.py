@@ -122,6 +122,15 @@ def estimate_claim_frequency(driver: dict) -> float:
 
     frequency *= mileage_factor
 
+    # Adjusting for driving experience, as it is reasonable to assume that an
+    # inexperienced driver will be more likely to get into an accident
+    experience = driver["years of experience"]
+
+    # Assume that claim frequency decreases by 5% for every five years of driving
+    # experience, with a maximum reduction of 30% (to avoid unrealistic reductions)
+    five_year_blocks = min(experience//5, 6)
+    frequency *= 1 - 0.05 * five_year_blocks
+
     return frequency
 
 # runs the examples below only if the file is run directly 
