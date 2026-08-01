@@ -113,6 +113,15 @@ def estimate_claim_frequency(driver: dict) -> float:
     # Assume that each previous accident increases the base frequency by 50%
     frequency *= 1 + 0.5 * previous_accidents
 
+    # Adjusting for mileage, because a driver travelling more than the assumed average
+    # of 11,000 km per year has more exposure to accidents
+    annual_mileage = driver["annual mileage"]
+    average_mileage = 11000
+
+    mileage_factor = annual_mileage/average_mileage
+
+    frequency *= mileage_factor
+
     return frequency
 
 # runs the examples below only if the file is run directly 
