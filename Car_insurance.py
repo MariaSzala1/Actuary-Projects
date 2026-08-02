@@ -174,6 +174,16 @@ def expected_annual_loss_company(drivers: dict, base_severity: float) -> float:
     loss = round(loss, 2)
     return loss
 
+# calculates an individual premium of a policyholder. I'm going to add an extra percentage,
+# called extra to make the premium a bit higher, to give some extra security to the 
+# insurance company. Extra must be entered as a decimal
+def premium(driver: dict, base_severity: float, extra: float) -> float:
+    loss = expected_annual_loss_policyholder(driver, base_severity)
+    premium = loss * (1 + extra)
+    premium = round(premium, 2)
+
+    return premium
+
 # runs the examples below only if the file is run directly 
 if __name__ == "__main__":
     driver = create_driver()
@@ -187,6 +197,7 @@ if __name__ == "__main__":
     print(round(estimate_claim_severity(driver, 3000), 2))
     print(expected_annual_loss_policyholder(driver, 3000))
     print(expected_annual_loss_company(drivers, 3000))
+    print(premium(driver, 3000, 0.25))
 
 
 
