@@ -133,6 +133,15 @@ def estimate_claim_frequency(driver: dict) -> float:
 
     return frequency
 
+# estimate multiple drivers' claim frequency
+def estimate_claims_frequencies(drivers: dict) -> dict:
+    frequencies = {}
+
+    for driver_id, driver in drivers.items():
+        frequencies[driver_id] = estimate_claim_frequency(driver)
+
+    return frequencies
+
 # This function will estimate the average cost of one claim, partly based on the
 # value of the car
 def estimate_claim_severity(driver: dict, base_severity: float) -> float:
@@ -146,15 +155,22 @@ def estimate_claim_severity(driver: dict, base_severity: float) -> float:
 
     return severity
 
+# Calculate the expected annual loss of the insurance company
+def expected_annual_loss(drivers: dict):
+    m = 1
+
 
 
 # runs the examples below only if the file is run directly 
 if __name__ == "__main__":
     driver = create_driver()
     drivers = sim_policyholders(5)
+    frequencies = estimate_claims_frequencies(drivers)
     print(driver)
     print(drivers)
     print(round(estimate_claim_frequency(driver), 2))
+    print({ driver_id: round(frequency, 3)
+           for driver_id, frequency in frequencies.items()})
     print(round(estimate_claim_severity(driver, 3000), 2))
 
 
