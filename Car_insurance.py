@@ -133,6 +133,21 @@ def estimate_claim_frequency(driver: dict) -> float:
 
     return frequency
 
+# This function will estimate the average cost of one claim, partly based on the
+# value of the car
+def estimate_claim_severity(driver: dict, base_severity: float) -> float:
+    # we need to make the cost of a claim dependent on the price of the car
+    car_value = driver["car value"]
+    average_car_value = 15000 # assumed earlier in create_driver()
+
+    # let's assume that half of the expected claim cost is dependent on car value
+    severity_factor = 0.5 + 0.5 * (car_value / average_car_value)
+    severity = base_severity * severity_factor
+
+    return severity
+
+
+
 # runs the examples below only if the file is run directly 
 if __name__ == "__main__":
     driver = create_driver()
@@ -140,6 +155,7 @@ if __name__ == "__main__":
     print(driver)
     print(drivers)
     print(round(estimate_claim_frequency(driver), 2))
+    print(round(estimate_claim_severity(driver, 3000), 2))
 
 
 
