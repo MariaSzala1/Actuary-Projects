@@ -155,11 +155,17 @@ def estimate_claim_severity(driver: dict, base_severity: float) -> float:
 
     return severity
 
+
 # Calculate the expected annual loss of the insurance company
-def expected_annual_loss(drivers: dict):
-    m = 1
+def expected_annual_loss(drivers: dict, base_severity: float) -> float:
+    loss = 0
+    frequencies = estimate_claims_frequencies(drivers)
 
+    for id_driver, driver in drivers.items():
+        loss += frequencies[id_driver] * estimate_claim_severity(driver, base_severity)
 
+    loss = round(loss, 2)
+    return loss
 
 # runs the examples below only if the file is run directly 
 if __name__ == "__main__":
@@ -172,6 +178,7 @@ if __name__ == "__main__":
     print({ driver_id: round(frequency, 3)
            for driver_id, frequency in frequencies.items()})
     print(round(estimate_claim_severity(driver, 3000), 2))
+    print(expected_annual_loss(drivers, 3000))
 
 
 
